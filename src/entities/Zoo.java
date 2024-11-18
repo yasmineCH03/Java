@@ -2,102 +2,130 @@ package entities;
 
 public class Zoo {
     Animal[] animals;
-    private String name;
-    private String city;
-    private int count = 0;
-    final int nbrCages=25;
+    String name;
+    String city;
+    int nbrCages;
+    int nbrAnimals;
+    Aquatic[] aquaticAnimals = new Aquatic[10];
+    int nbrAquaticAnimals = 0;
 
-    public void setAnimals(Animal[] animals) {
-        this.animals = animals;
-    }
-    public Animal[] getAnimals() {
-        return animals;
-    }
-    public String getName() {
-        return name;
-    }
-    public void setName(String name) {
-        if (name.isEmpty())
-            System.out.println("entities.Zoo name can't be an empty string");
-        else
-            this.name = name;
-    }
-    public String getCity() {
-        return city;
-    }
-    public void setCity(String city) {
-        this.city = city;
-    }
-    public int getCount() {
-        return count;
-    }
-    public void setCount(int count) {
-        this.count = count;
-    }
-
-    public Zoo(String name, String city) {
-        animals = new Animal[nbrCages];
-        this.setName(name);
-        this.setCity(city);
-    }
-
-    // ... autres methods ...
-
-    public boolean addAnimal(Animal animal) {
-        if(isZooFull()){
-            animals[count] = animal;
-            count++;
-            System.out.println("Animal ajouté avec success !");
-            return true;
-        }
-        return false;
-    }
-
-
-
-
-    public void displayAnimals() {
-        for (Animal i : animals) {
-            if (i != null) {
-                System.out.println(i.getName());
+    public void displayNumberOfAquaticsByType() {
+        int dolphinCount = 0;
+        int penguinCount = 0;
+        for (int i = 0; i < nbrAquaticAnimals; i++) {
+            if (aquaticAnimals[i] instanceof Dolphin) {
+                dolphinCount++;
+            } else if (aquaticAnimals[i] instanceof Penguin) {
+                penguinCount++;
             }
         }
+        System.out.println("Nombre de dauphins dans le zoo : " + dolphinCount);
+        System.out.println("Nombre de pingouins dans le zoo : " + penguinCount);
     }
 
-    public int searchAnimal(Animal animal) {
+    public float maxPenguinSwimmingDepth() {
+        float maxDepth = 0;
+        for (int i = 0; i < nbrAquaticAnimals; i++) {
+            if (aquaticAnimals[i] instanceof Penguin) {
+                Penguin penguin = (Penguin) aquaticAnimals[i];
+                if (penguin.getSwimmingDepth() > maxDepth) {
+                    maxDepth = penguin.getSwimmingDepth();
+                }
+            }
+        }
+        return maxDepth;
+    }
+
+    public void showAquaticAnimals() {
+        for (int i = 0; i < nbrAquaticAnimals; i++) {
+            aquaticAnimals[i].swim();
+        }
+    }
+    public void addAquaticAnimal(Aquatic aquatic) {
+        if (nbrAquaticAnimals < aquaticAnimals.length) {
+            aquaticAnimals[nbrAquaticAnimals] = aquatic;
+            nbrAquaticAnimals++;
+            System.out.println(aquatic.getName() + " ajouté au zoo.");
+        } else {
+            System.out.println("Le zoo est plein, impossible d'ajouter plus d'animaux aquatiques.");
+        }
+    }
+
+    public Zoo (String name,String city)
+    {
+        animals = new Animal[nbrCages];
+        setName(name);
+        this.city = city;
+        this.nbrCages = nbrCages;
+    }
+    public void displayZoo() {
+        System.out.println("Animaux dans le zoo " + name + " :");
+        for (int i = 0; i < nbrAnimals; i++) {
+            Animal animal = animals[i];
+            System.out.println("Famille: " + animal.family + ", Nom: " + animal.name +
+                    ", Âge: " + animal.age + ", Mammifère: " + animal.isMammal);
+        }
+    }
+    boolean addAnimal(Animal animal) {
+        if (searchAnimal(animal) != -1) {
+            System.out.println("L'animal " + animal.name + " existe déjà dans le zoo.");
+            return false;
+        }
+        if (!isZooFull()) {
+            animals[nbrAnimals] = animal;
+            nbrAnimals++;
+            return true;
+        } else {
+            System.out.println("Impossible d'ajouter l'animal. Le zoo est plein.");
+            return false;
+        }
+    }
+
+    int searchAnimal(Animal animal) {
         for (int i = 0; i < nbrCages; i++) {
-            if (animals[i] != null && animals[i].getName().equals(animal.getName())) {
+            if (animals[i].name.equals(animal.name)) {
                 return i;
             }
         }
         return -1;
     }
 
-    public boolean removeAnimal(Animal animal) {
-        int deleteIndex= searchAnimal(animal);
-        animals[deleteIndex] = null;
+    boolean removeAnimal(Animal animal) {
+        int deletedIndex = searchAnimal(animal);
+        animals[deletedIndex] = null;
+        animals[nbrAnimals - 1] = null;
+        nbrAnimals--;
         return true;
+
     }
 
-    public boolean isZooFull(){
-        if(count < nbrCages){
-            System.out.println("Zoo is not Full");
-            return false;
-        }
-        else
-            System.out.println("Zoo Full");
-        return true;
+    @Override
+    public String toString() {
+        return "name : " + name + " city : " + city + "nbrCages : " + nbrCages + "animals numbers  : " + nbrAnimals;
+
     }
-    public Zoo comparerZoo(Zoo z1, Zoo z2) {
-        if (z1.count>=z2.count)
-        {
-            System.out.println(z1.getName()+" have more animals than "+z2.getName());
+    public boolean isZooFull() {
+        return nbrAnimals == nbrCages;
+    }
+
+    public static Zoo comparerZoo(Zoo z1, Zoo z2) {
+        if (z1.nbrAnimals > z2.nbrAnimals) {
+            System.out.println("Le zoo avec le plus d'animaux est : " + z1.name);
             return z1;
-        }
-        else {
-            System.out.println(z2.getName()+" have more animals than "+z1.getName());
+        } else if (z1.nbrAnimals < z2.nbrAnimals) {
+            System.out.println("Le zoo avec le plus d'animaux est : " + z2.name);
             return z2;
+        } else {
+            System.out.println("Les deux zoos ont le même nombre d'animaux : " + z1.nbrAnimals);
+            return null;
         }
     }
 
+    public void setName(String name) {
+        if (name != null && !name.isEmpty()) {
+            this.name = name;
+        } else {
+            System.out.println("Le nom du zoo ne doit pas être vide");
+        }
+    }
 }
