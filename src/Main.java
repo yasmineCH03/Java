@@ -9,13 +9,9 @@ public class Main {
         Animal chat=new Animal("Chat","miel",5,true);
         Zoo myZoo=new Zoo("Central Park Zoo","Madagascar");
         Zoo zoo2=new Zoo("ariena","tunis");
-        // myZoo.displayZoo();
-        myZoo.addAnimal(lion);
-        myZoo.addAnimal(giraffe);
-        myZoo.addAnimal(chat);
-        myZoo.displayAnimals();
-        System.out.println(myZoo.searchAnimal(chat));
-        System.out.println(myZoo.comparerZoo(myZoo,zoo2).name+" a plus d'animaux");
+
+
+
     }
 
 }
