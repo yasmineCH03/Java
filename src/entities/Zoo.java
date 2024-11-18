@@ -1,4 +1,5 @@
 package entities;
+import exceptions.ZooFullException;
 
 public class Zoo {
     Animal[] animals;
@@ -8,6 +9,32 @@ public class Zoo {
     int nbrAnimals;
     Aquatic[] aquaticAnimals = new Aquatic[10];
     int nbrAquaticAnimals = 0;
+
+    public int getNbrAnimals() {
+        return nbrAnimals;
+    }
+
+    public void addAnimal(Animal animal) throws ZooFullException, Exception {
+        if (searchAnimal(animal) != -1) {
+            throw new Exception("L'animal " + animal.getName() + " existe déjà dans le zoo.");
+        }
+        if (isZooFull()) {
+            throw new ZooFullException("Impossible d'ajouter l'animal. Le zoo est plein.");
+        }
+        animals[nbrAnimals] = animal;
+        nbrAnimals++;
+    }
+
+    /*public void addAnimal(Animal animal) throws Exception {
+        if (searchAnimal(animal) != -1) {
+            throw new Exception("L'animal " + animal.getName() + " existe déjà dans le zoo.");
+        }
+        if (isZooFull()) {
+            throw new Exception("Impossible d'ajouter l'animal. Le zoo est plein.");
+        }
+        animals[nbrAnimals] = animal;
+        nbrAnimals++;
+    }*/
 
     public void displayNumberOfAquaticsByType() {
         int dolphinCount = 0;
@@ -56,7 +83,6 @@ public class Zoo {
         animals = new Animal[nbrCages];
         setName(name);
         this.city = city;
-        this.nbrCages = nbrCages;
     }
     public void displayZoo() {
         System.out.println("Animaux dans le zoo " + name + " :");
@@ -66,20 +92,7 @@ public class Zoo {
                     ", Âge: " + animal.age + ", Mammifère: " + animal.isMammal);
         }
     }
-    boolean addAnimal(Animal animal) {
-        if (searchAnimal(animal) != -1) {
-            System.out.println("L'animal " + animal.name + " existe déjà dans le zoo.");
-            return false;
-        }
-        if (!isZooFull()) {
-            animals[nbrAnimals] = animal;
-            nbrAnimals++;
-            return true;
-        } else {
-            System.out.println("Impossible d'ajouter l'animal. Le zoo est plein.");
-            return false;
-        }
-    }
+
 
     int searchAnimal(Animal animal) {
         for (int i = 0; i < nbrCages; i++) {
