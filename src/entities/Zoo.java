@@ -78,7 +78,7 @@ public class Zoo {
         }
     }
 
-    public Zoo (String name,String city)
+    public Zoo (String name, String city, int i)
     {
         animals = new Animal[nbrCages];
         setName(name);
